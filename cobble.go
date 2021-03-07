@@ -26,6 +26,7 @@ func main() {
 		if window.WasKeyPressed(draw.KeyEscape) {
 			window.Close()
 		}
+		window.DrawText("Drag with left mouse.\nClick right while dragging to rotate.", 0, 0, draw.White)
 
 		mouseX, mouseY := window.MousePosition()
 		isLeftMouseDown := window.IsMouseDown(draw.LeftButton)
