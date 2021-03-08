@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io/ioutil"
+	"os/user"
+	"path/filepath"
 
 	"github.com/gonutz/prototype/draw"
 )
@@ -136,12 +138,18 @@ func startRectangles() []rectangle {
 	return r
 }
 
-const saveFile = "cobbles.rects"
+func saveFile() string {
+	path := "cobbles.rects"
+	if u, err := user.Current(); err == nil {
+		path = filepath.Join(u.HomeDir, path)
+	}
+	return path
+}
 
 var enc = binary.LittleEndian
 
 func loadRectangles() ([]rectangle, error) {
-	data, err := ioutil.ReadFile(saveFile)
+	data, err := ioutil.ReadFile(saveFile())
 	if err != nil {
 		return nil, err
 	}
@@ -168,5 +176,5 @@ func saveRectangles(r []rectangle) {
 		binary.Write(w, enc, int32(r.w))
 		binary.Write(w, enc, int32(r.h))
 	}
-	ioutil.WriteFile(saveFile, buf.Bytes(), 0666)
+	ioutil.WriteFile(saveFile(), buf.Bytes(), 0666)
 }
